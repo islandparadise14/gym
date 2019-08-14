@@ -1,8 +1,12 @@
 package com.example.myofilament;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,6 +48,9 @@ public class ListFragment extends Fragment {
     SharedPrefManager msharedPrefs;
     TextView reset;
     private BluetoothSPP bt;
+
+
+
 
     TextView sample;
 
@@ -105,6 +112,8 @@ public class ListFragment extends Fragment {
 
         setMainscroll();
 
+        final TextView test = (TextView)view.findViewById(R.id.test);
+
         if (!bt.isBluetoothAvailable()) { //블루투스 사용 불가
             Toast.makeText(getActivity()
                     , "Bluetooth is not available"
@@ -114,7 +123,7 @@ public class ListFragment extends Fragment {
 
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() { //데이터 수신
             public void onDataReceived(byte[] data, String message) {
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                test.setText(data.toString());
             }
         });
 
@@ -148,7 +157,7 @@ public class ListFragment extends Fragment {
             }
         });
 
-
+        setup();
         return view;
     }
 
@@ -170,6 +179,7 @@ public class ListFragment extends Fragment {
         msharedPrefs.setList(mainData);
         mListener = null;
         bt.stopService();
+        ((MainActivity)getActivity()).resetmedia();
     }
 
     public interface OnFragmentInteractionListener {
@@ -192,7 +202,12 @@ public class ListFragment extends Fragment {
     }
 
     public void setup() {
-
+        Button btnSend = view.findViewById(R.id.btnSend); //데이터 전송
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                bt.send("Text", true);
+            }
+        });
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -232,12 +247,35 @@ public class ListFragment extends Fragment {
         startsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainData.add((int)((double)Math.random()*100));
+                int input = (int)((double)Math.random()*100);
+                if(input>50 + spinner.getSelectedItemPosition()*5){
+                    ((MainActivity)getActivity()).startmedia();
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                            getActivity());
+
+                    // 제목셋팅
+                    alertDialogBuilder.setTitle("달성완료");
+                    alertDialogBuilder
+                            .setMessage("축하드립니다")
+                            .setCancelable(false)
+                            .setPositiveButton("완료",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(
+                                                DialogInterface dialog, int id) {
+                                            ((MainActivity)getActivity()).stopmedia();
+                                        }
+                                    });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
+                mainData.add(input);
                 calculation();
                 setRecyclerView();
                 setMainscroll();
             }
         });
+
 
     }
 

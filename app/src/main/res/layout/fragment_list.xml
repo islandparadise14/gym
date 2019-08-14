@@ -25,6 +25,18 @@
                 android:padding="@dimen/space"
                 android:elevation="@dimen/shadow">
 
+                <Button
+                    android:id="@+id/btnSend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Button" />
+
+                <TextView
+                    android:id="@+id/test"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="match_parent"

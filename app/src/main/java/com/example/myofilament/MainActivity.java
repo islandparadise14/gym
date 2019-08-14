@@ -1,6 +1,7 @@
 package com.example.myofilament;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView;
     int pageNumber = 0;
     FragmentManager fragmentManager;
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,23 @@ public class MainActivity extends AppCompatActivity {
         TimerThread timer = new TimerThread();
         final Thread thread1 = new Thread(timer);
         thread1.start();
+    }
+
+    public void startmedia(){
+        mediaPlayer = MediaPlayer.create(MainActivity.this,R.raw.sound_button_wrong);
+        mediaPlayer.start();
+    }
+
+    public void stopmedia(){
+        mediaPlayer.stop();
+        mediaPlayer.reset();
+    }
+
+    public void resetmedia(){
+        if(mediaPlayer != null){
+            mediaPlayer.release();
+            mediaPlayer=null;
+        }
     }
 
 }
