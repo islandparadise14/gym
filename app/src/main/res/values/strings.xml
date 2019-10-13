@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">근피로 측정기</string>
+    <string name="devices">Bluetooth Devices</string>
+</resources>
